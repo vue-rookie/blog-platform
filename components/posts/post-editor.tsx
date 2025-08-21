@@ -103,9 +103,10 @@ export function PostEditor({ post, onSave }: PostEditorProps) {
 
       if (response.ok) {
         // 插入图片到内容中
-        const imageMarkdown = `![${file.name}](${data.url})\n\n`
+        const imageUrl = data.data?.url || data.url
+        const imageMarkdown = `![${file.name}](${imageUrl})\n\n`
         setContent((prev) => prev + imageMarkdown)
-        setSuccess("图片上传成功")
+        setSuccess(data.message || "图片上传成功")
         setTimeout(() => setSuccess(""), 3000)
       } else {
         setError(data.error || "上传失败")
@@ -154,7 +155,7 @@ export function PostEditor({ post, onSave }: PostEditorProps) {
 
       if (response.ok) {
         if (!isAutoSave) {
-          setSuccess(post ? "文章更新成功" : "文章创建成功")
+          setSuccess(data.message || (post ? "文章更新成功" : "文章创建成功"))
           if (onSave) {
             onSave({ ...post, ...postData } as Post)
           }

@@ -21,6 +21,12 @@ export default withAuth(
           return !!token
         }
 
+        if (pathname.startsWith("/write")) {
+          const hasValidRole = token?.role === "admin" || token?.role === "author"
+          console.log("[v0] Write route check - Has valid role:", hasValidRole)
+          return hasValidRole
+        }
+
         return true
       },
     },
@@ -28,5 +34,5 @@ export default withAuth(
 )
 
 export const config = {
-  matcher: ["/admin/:path*", "/profile/:path*", "/user/:path*"],
+  matcher: ["/admin/:path*", "/profile/:path*", "/user/:path*", "/write/:path*"],
 }
