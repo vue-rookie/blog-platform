@@ -69,9 +69,22 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
+    async signIn({ user, account, profile }) {
+      // 允许所有认证成功的用户登录
+      return true
+    },
+    async redirect({ url, baseUrl }) {
+      // 如果是相对路径，则添加baseUrl
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // 如果回调URL在同一域名下，则允许
+      else if (new URL(url).origin === baseUrl) return url
+      // 否则重定向到首页
+      return baseUrl
+    },
   },
   pages: {
     signIn: "/auth/signin",
     signUp: "/auth/signup",
+    error: "/auth/error",
   },
 }

@@ -32,14 +32,22 @@ export default function SignInPage() {
       })
 
       if (result?.error) {
+        console.error("Sign in error:", result.error)
         setError("邮箱或密码错误")
-      } else {
+      } else if (result?.ok) {
+        // 等待会话更新
         const session = await getSession()
+        console.log("Login successful, session:", session)
+        
+        // 根据用户角色跳转
         if (session?.user?.role === "admin" || session?.user?.role === "author") {
           router.push("/admin")
         } else {
           router.push("/")
         }
+        router.refresh()
+      } else {
+        setError("登录失败，请重试")
       }
     } catch (error) {
       setError("登录失败，请重试")
